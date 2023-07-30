@@ -52,9 +52,9 @@ car::car(unsigned int name_, const char* n,collisionsphere ccs, float sprints,fl
 		{
 				if(getLocation().y<5)
 		{
-			setPosition(vector3d(getLocation().x,50,getLocation().z));
+			setPosition(vector3d(getLocation().x,20,getLocation().z));
 		
-			speed=0.0f;
+		
 		}
 		if(direction.y>=force.y)
 			
