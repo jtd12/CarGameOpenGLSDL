@@ -1,0 +1,145 @@
+# Blender MTL File: 'race track4.blend'
+# Material Count: 12
+
+newmtl Bark_c.004
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Bark_c.jpg
+map_Bump C:\\Users\\jason\\Desktop\\Jason Colomay\\opengl project\\jeu de voiture de course opengl sdl\\data\\decor\\Bark_n.png
+
+newmtl Bridge_Wall_c.004
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 2
+map_Kd Bridge_Wall_c.jpg
+map_d C:\\Users\\jason\\Desktop\\Jason Colomay\\opengl project\\logiciel mode 3D\\logiciel modelisation 3D 2eme version\\data\\decor\\Bridge_Wall_c.png.bmp
+
+newmtl Concrete_Barrier_.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Concrete_Barrier_c.jpg
+map_Bump C:\\Users\\jason\\Desktop\\Jason Colomay\\opengl project\\jeu de voiture de course opengl sdl\\data\\decor\\Concrete_Barrier_n.png
+
+newmtl Curb_01_c.004
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.161765 0.161765 0.161765
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Curb_01_c.jpg
+map_Bump C:\\Users\\jason\\Desktop\\Jason Colomay\\opengl project\\jeu de voiture de course opengl sdl\\data\\decor\\Curb_01_n.png
+
+newmtl Grass_01_c.004
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Grass_01_c.jpg
+map_Bump C:\\Users\\jason\\Desktop\\Jason Colomay\\opengl project\\jeu de voiture de course opengl sdl\\data\\decor\\Grass_01_n.png
+
+newmtl Outer_Fence_01_c.004
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Outer_Fence_01_c.jpg
+map_Bump C:\\Users\\jason\\Desktop\\Jason Colomay\\opengl project\\jeu de voiture de course opengl sdl\\data\\decor\\Outer_Fence_01_n.png
+
+newmtl Race_Track_Base_c.004
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.268382 0.268382 0.268382
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Race_Track_Base_c.jpg
+map_Bump C:\\Users\\jason\\Desktop\\Jason Colomay\\opengl project\\jeu de voiture de course opengl sdl\\data\\decor\\Race_Track_Base_n.png
+
+newmtl Race_Track_Finishing_
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Race_Track_Finishing_Line_c.jpg
+map_Bump C:\\Users\\jason\\Desktop\\Jason Colomay\\opengl project\\jeu de voiture de course opengl sdl\\data\\decor\\Race_Track_Finishing_Line_n.png
+
+newmtl SpruceBranch_c.004
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Bark_c.jpg
+map_Bump C:\\Users\\jason\\Desktop\\Jason Colomay\\opengl project\\jeu de voiture de course opengl sdl\\data\\decor\\SpruceBranch_n.png
+
+newmtl Tarmac_Curve_c.002
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Tarmac_Curve_c.jpg
+map_Bump C:\\Users\\jason\\Desktop\\Jason Colomay\\opengl project\\jeu de voiture de course opengl sdl\\data\\decor\\Tarmac_Curve_n.png
+
+newmtl Tarmac_c.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 2
+map_Kd Tarmac_Curve_c.jpg
+map_Bump C:\\Users\\jason\\Desktop\\Jason Colomay\\opengl project\\jeu de voiture de course opengl sdl\\data\\decor\\Tarmac_n.png
+map_d C:\\Users\\jason\\Desktop\\Jason Colomay\\opengl project\\logiciel mode 3D\\logiciel modelisation 3D 2eme version\\data\\decor\\Tarmac_c.png.bmp
+
+newmtl lambert4.004
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.400000 0.400000 0.400000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2

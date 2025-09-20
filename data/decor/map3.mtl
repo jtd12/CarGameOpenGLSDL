@@ -1,0 +1,130 @@
+# Blender MTL File: 'race track4.blend'
+# Material Count: 11
+
+newmtl Bark_c.005
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Bark_c.jpg
+map_Bump Bark_n.png
+
+newmtl Bridge_Wall_c.005
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 2
+map_Kd Bridge_Wall_c.jpg
+map_d C:\\Users\\jason\\Desktop\\Jason Colomay\\opengl project\\logiciel mode 3D\\logiciel modelisation 3D 2eme version\\data\\decor\\Bridge_Wall_c.png.bmp
+
+newmtl Concrete_Barrier_c.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Concrete_Barrier_c.jpg
+map_Bump Concrete_Barrier_n.png
+
+newmtl Curb_01_c.005
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.161765 0.161765 0.161765
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Curb_01_c.jpg
+map_Bump Curb_01_n.png
+
+newmtl Grass_01_c.005
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Grass_01_c.jpg
+map_Bump Grass_01_n.png
+
+newmtl Outer_Fence_01_c.005
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Outer_Fence_01_c.jpg
+map_Bump Outer_Fence_01_n.png
+
+newmtl Race_Track_Base_c.005
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.268382 0.268382 0.268382
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Race_Track_Base_c.jpg
+map_Bump Race_Track_Base_n.png
+
+newmtl SpruceBranch_c.005
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Bark_c.jpg
+map_Bump SpruceBranch_n.png
+
+newmtl Tarmac_Curve_c.003
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Tarmac_Curve_c.jpg
+map_Bump Tarmac_Curve_n.png
+
+newmtl lambert1.003
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.400000 0.400000 0.400000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl lambert4.005
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.400000 0.400000 0.400000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
