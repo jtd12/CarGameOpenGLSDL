@@ -155,26 +155,12 @@ void Control(float movevel,float mousevel,bool mi)
 		camYaw+=mousevel*(MidX-tmpx);
 		camPitch+=mousevel*(MidY-tmpy);
 		lockCamera();
-		SDL_WarpMouse(MidX,MidY);
-		Uint8* state=SDL_GetKeyState(NULL);
-		if(state[SDLK_w])
-		{
-	//		if(camPitch!=90 && camPitch!=-90)
-				moveCamera(movevel,0.0);
-	//		moveCameraUp(movevel,0.0);
-		}else if(state[SDLK_s])
-		{
-	//		if(camPitch!=90 && camPitch!=-90)
-				moveCamera(movevel,180.0);
-	//		moveCameraUp(movevel,180.0);
-		}		
-		if(state[SDLK_a])
-			moveCamera(movevel,90.0);
-		else if(state[SDLK_d])
-			moveCamera(movevel,270);	
-	}
+		
+
+	
 	glRotatef(-camPitch,1.0,0.0,0.0);
 	glRotatef(-camYaw,0.0,1.0,0.0);
+}
 }
 
 void UpdateCamera()

@@ -100,30 +100,7 @@ void text::setTest(bool b)
 
 void text::test(vector3d& pos,vector3d& rot,vector3d& scale)
 {
-	Uint8* key=SDL_GetKeyState(NULL);
-	if(key[SDLK_f])
-		pos.x-=0.01;
-	else if(key[SDLK_h])
-		pos.x+=0.01;
-	else if(key[SDLK_t])
-		pos.y+=0.01;
-	else if(key[SDLK_g])
-		pos.y-=0.01;
-	else if(key[SDLK_z])
-		pos.z-=0.01;
-	else if(key[SDLK_u])
-		pos.z+=0.01;
-	else if(key[SDLK_x])
-	{
-		scale.x+=0.005;
-		scale.y+=0.005;
-		scale.z+=0.005;
-	}
-	else if(key[SDLK_y])
-	{
-		scale.x-=0.005;
-		scale.y-=0.005;
-		scale.z-=0.005;
-	}
+
+	
 	std::cout << pos << rot << scale << std::endl;
 }

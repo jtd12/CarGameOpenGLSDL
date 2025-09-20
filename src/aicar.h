@@ -15,11 +15,11 @@
 class carAI
 {
 	public:
-		carAI(std::vector<unsigned int>& anim,float sp,collisionsphere css);
+		carAI(std::vector<unsigned int>& anim,float sp);
 		~carAI();
 		void show();
-		void update(std::vector<collisionplane>& collplane);
-		collisionsphere * getCollisionSphere();
+		void update();
+
 		void setLocation(vector3d newLoc);
 		private:
 	std::vector<unsigned int > frames;
@@ -27,7 +27,7 @@ class carAI
 	float curFrame;
 	float speed;
 	vector3d direction,rotation;
-	collisionsphere cs;
+
 
 			
 		

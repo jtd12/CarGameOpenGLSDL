@@ -1,5 +1,5 @@
-#include <C:/library/SDL-1.2.15/include/SDL/SDL.h>
-#include <C:/library/SDL_image-1.2.12/include/SDL_image.h>
+#include "C:\library\SDL2-2.0.12\x86_64-w64-mingw32\include\SDL2\SDL.h"
+#include"C:\library\SDL_Image 2.0\include\SDL2\SDL_image.h"
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <cstdlib>
@@ -20,6 +20,15 @@
  #ifndef GL_CLAMP_TO_EDGE
  #define GL_CLAMP_TO_EDGE 0x812F
  #endif
+ 
+
+ 
+struct CollisionTriangle {
+    vector3d v0;
+    vector3d v1;
+    vector3d v2;
+};
+
 struct coordinate{
 	float x,y,z;
 	coordinate(float a,float b,float c);
@@ -50,6 +59,7 @@ struct texcoord{
 };
 
 class objloader{
+
 	std::vector<std::string*> coord;
 	std::vector<coordinate*> vertex;
 	std::vector<face*> faces;
@@ -69,9 +79,12 @@ GLuint  loadTexture(const char * filename,bool useMipMap);
 	public:
 	objloader();
 	~objloader();
-	int load(const std::string& filename,std::vector<collisionplane>* collisionplane);
+	float getHeightAt(float x, float z);
+	bool barycentricXZ(const vector3d& p, const vector3d& a, const vector3d& b, const vector3d& c, float& u, float& v, float& w);
+	int load(const std::string& filename);
 	void loadAnimation(std::vector<unsigned int>& frames, std::string filename, unsigned int num);
 		GLfloat ombre[4][4];
+			std::vector<CollisionTriangle> collisionMesh; // <-- ajoute ceci
 };
 
 #endif

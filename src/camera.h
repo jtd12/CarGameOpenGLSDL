@@ -2,7 +2,7 @@
 #define CAMERA_H
 #include <cmath>
 #include <iostream>
-#include <C:/library/SDL-1.2.15/include/SDL/SDL.h>
+#include "C:\library\SDL2-2.0.12\x86_64-w64-mingw32\include\SDL2\SDL.h"
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include "vector.h"
@@ -13,6 +13,10 @@ class camera{
 	float movevel;
 	float mousevel;
 	bool mi,ismoved;
+	bool pitch;
+	bool yaw;
+	bool pitch2;
+	bool yaw2;
 	void lockCamera();
 	void moveCamera(float dir);
 	void moveCameraUp(float dir);
@@ -49,6 +53,13 @@ class camera{
 		void mouseIn(bool b);
 		void setSpeed(float mv,float mov);
 		bool isMoved();
+		bool getPitch_();
+		bool getYaw_();
+		void setPitch(bool b);
+		void setYaw(bool b);
+		void setYaw2(bool cYaw);
+		void setPitch2(bool cYaw);
+
 };
 
 #endif

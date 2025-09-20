@@ -1,6 +1,6 @@
 #ifndef SKYBOX_H
 #define SKYBOX_H
-#include <C:/SDL-1.2.15/include/SDL/SDL.h>
+#include "C:\library\SDL2-2.0.12\x86_64-w64-mingw32\include\SDL2\SDL.h"
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <cstdlib>

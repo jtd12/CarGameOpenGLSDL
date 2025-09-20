@@ -59,7 +59,27 @@
 		v=b;
 	}
 
-int objloader::load(const std::string& filename,std::vector<collisionplane>* collplane)
+bool objloader::barycentricXZ(const vector3d& p, const vector3d& a, const vector3d& b, const vector3d& c, float& u, float& v, float& w) {
+    vector3d v0 = b - a;
+    vector3d v1 = c - a;
+    vector3d v2 = p - a;
+
+    float d00 = v0.x*v0.x + v0.z*v0.z;
+    float d01 = v0.x*v1.x + v0.z*v1.z;
+    float d11 = v1.x*v1.x + v1.z*v1.z;
+    float d20 = v2.x*v0.x + v2.z*v0.z;
+    float d21 = v2.x*v1.x + v2.z*v1.z;
+    float denom = d00*d11 - d01*d01;
+    if (fabs(denom) < 1e-6f) return false;
+
+    v = (d11*d20 - d01*d21) / denom;
+    w = (d00*d21 - d01*d20) / denom;
+    u = 1.0f - v - w;
+
+    return (u>=0 && v>=0 && w>=0);
+}
+
+int objloader::load(const std::string& filename)
 {
 	ismaterial=false;
 	isnormals=false;
@@ -100,54 +120,113 @@ int objloader::load(const std::string& filename,std::vector<collisionplane>* col
 			normals.push_back(new coordinate(tmpx,tmpy,tmpz));	
 			out << "vn " << tmpx << " " << tmpy << " " << tmpz << std::endl;
 		}else if((*coord[i])[0]=='f')
-		{
-			int a,b,c,d,e;			
-			if(coll && collplane!=NULL)
-			{
-				sscanf(coord[i]->c_str(),"f %d//%d %d//%d %d//%d %d//%d",&a,&b,&c,&b,&d,&b,&e,&b);
-				collplane->push_back(collisionplane(normals[b-1]->x,normals[b-1]->y,normals[b-1]->z,vertex[a-1]->x,vertex[a-1]->y,vertex[a-1]->z,vertex[c-1]->x,vertex[c-1]->y,vertex[c-1]->z,vertex[d-1]->x,vertex[d-1]->y,vertex[d-1]->z,vertex[e-1]->x,vertex[e-1]->y,vertex[e-1]->z));
-			}else
-			{
-				if(count(coord[i]->begin(),coord[i]->end(),' ')==4)
-				{
-					if(coord[i]->find("//")!=std::string::npos)
-					{
-						sscanf(coord[i]->c_str(),"f %d//%d %d//%d %d//%d %d//%d",&a,&b,&c,&b,&d,&b,&e,&b);
-						faces.push_back(new face(b,a,c,d,e,0,0,0,0,curmat));
-					}else if(coord[i]->find("/")!=std::string::npos)
-					{
-						int t[4];
-						sscanf(coord[i]->c_str(),"f %d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d",&a,&t[0],&b,&c,&t[1],&b,&d,&t[2],&b,&e,&t[3],&b);
-						out << t[0] << " " <<t[1] << " " <<t[2] << " " <<t[3] << " " << a << " " << b << " " << c << " " << d << " " << e << std::endl;
-						faces.push_back(new face(b,a,c,d,e,t[0],t[1],t[2],t[3],curmat));
-					}else{
-						sscanf(coord[i]->c_str(),"f %d %d %d %d",&a,&b,&c,&d);
-						faces.push_back(new face(-1,a,b,c,d,0,0,0,0,curmat));					
-					}
-				}else{
-						if(coord[i]->find("//")!=std::string::npos)
-						{
-							sscanf(coord[i]->c_str(),"f %d//%d %d//%d %d//%d",&a,&b,&c,&b,&d,&b);
-							faces.push_back(new face(b,a,c,d,0,0,0,curmat));
-						}else if(coord[i]->find("/")!=std::string::npos)
-						{
-							int t[3];
-							sscanf(coord[i]->c_str(),"f %d/%d/%d %d/%d/%d %d/%d/%d",&a,&t[0],&b,&c,&t[1],&b,&d,&t[2],&b);
-							faces.push_back(new face(b,a,c,d,t[0],t[1],t[2],curmat));
-						}else{
-							sscanf(coord[i]->c_str(),"f %d %d %d",&a,&b,&c);
-							faces.push_back(new face(-1,a,b,c,0,0,0,curmat));					
-						}
-				}
-			}
-	}else if((*coord[i])[0]=='u' && (*coord[i])[1]=='s' && (*coord[i])[2]=='e')
+{
+    int a,b,c,d,e;                 // indices de sommets
+    int na,nb,nc,nd,ne;            // indices de normales (si présents)
+
+    if(coll) // si matériau collision
+    {
+        int spaces = std::count(coord[i]->begin(), coord[i]->end(), ' ');
+
+        if(spaces == 3) // triangle
+        {
+            if(coord[i]->find("//") != std::string::npos)
+                sscanf(coord[i]->c_str(),"f %d//%d %d//%d %d//%d",
+                       &a,&na, &b,&nb, &c,&nc);
+            else
+                sscanf(coord[i]->c_str(),"f %d %d %d",&a,&b,&c);
+
+            CollisionTriangle tri;
+            tri.v0 = vector3d(vertex[a-1]->x, vertex[a-1]->y, vertex[a-1]->z);
+            tri.v1 = vector3d(vertex[b-1]->x, vertex[b-1]->y, vertex[b-1]->z);
+            tri.v2 = vector3d(vertex[c-1]->x, vertex[c-1]->y, vertex[c-1]->z);
+            collisionMesh.push_back(tri);
+        }
+        else if(spaces == 4) // quad -> deux triangles
+        {
+            if(coord[i]->find("//") != std::string::npos)
+                sscanf(coord[i]->c_str(),"f %d//%d %d//%d %d//%d %d//%d",
+                       &a,&na, &b,&nb, &c,&nc, &d,&nd);
+            else
+                sscanf(coord[i]->c_str(),"f %d %d %d %d",&a,&b,&c,&d);
+
+		 if(a>0 && b>0 && c>0 && d>0 && a<=vertex.size() && b<=vertex.size() && c<=vertex.size() && d<=vertex.size())
+		        {
+            CollisionTriangle tri1, tri2;
+            tri1.v0 = vector3d(vertex[a-1]->x, vertex[a-1]->y, vertex[a-1]->z);
+            tri1.v1 = vector3d(vertex[b-1]->x, vertex[b-1]->y, vertex[b-1]->z);
+            tri1.v2 = vector3d(vertex[c-1]->x, vertex[c-1]->y, vertex[c-1]->z);
+
+			
+            tri2.v0 = vector3d(vertex[a-1]->x, vertex[a-1]->y, vertex[a-1]->z);
+            tri2.v1 = vector3d(vertex[c-1]->x, vertex[c-1]->y, vertex[c-1]->z);
+            tri2.v2 = vector3d(vertex[d-1]->x, vertex[d-1]->y, vertex[d-1]->z);
+	
+			
+			 
+            collisionMesh.push_back(tri1);
+            collisionMesh.push_back(tri2);
+         }
+             else
+        {
+            out << "Indices quad invalides : " << a << "," << b << "," << c << "," << d << std::endl;
+        }
+        }
+    }else // géométrie normale (rendu)
+    {
+        if(count(coord[i]->begin(),coord[i]->end(),' ')==4) // quad
+        {
+            if(coord[i]->find("//")!=std::string::npos)
+            {
+                sscanf(coord[i]->c_str(),"f %d//%d %d//%d %d//%d %d//%d",
+                       &a,&na, &b,&nb, &c,&nc, &d,&nd);
+                faces.push_back(new face(na,a,b,c,d,0,0,0,0,curmat));
+            }
+            else if(coord[i]->find("/")!=std::string::npos)
+            {
+                int t[4];
+                sscanf(coord[i]->c_str(),"f %d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d",
+                       &a,&t[0],&na, &b,&t[1],&nb, &c,&t[2],&nc, &d,&t[3],&nd);
+                faces.push_back(new face(na,a,b,c,d,t[0],t[1],t[2],t[3],curmat));
+            }
+            else
+            {
+                sscanf(coord[i]->c_str(),"f %d %d %d %d",&a,&b,&c,&d);
+                faces.push_back(new face(-1,a,b,c,d,0,0,0,0,curmat));					
+            }
+        }
+        else // triangle
+        {
+            if(coord[i]->find("//")!=std::string::npos)
+            {
+                sscanf(coord[i]->c_str(),"f %d//%d %d//%d %d//%d",
+                       &a,&na, &b,&nb, &c,&nc);
+                faces.push_back(new face(na,a,b,c,0,0,0,curmat));
+            }
+            else if(coord[i]->find("/")!=std::string::npos)
+            {
+                int t[3];
+                sscanf(coord[i]->c_str(),"f %d/%d/%d %d/%d/%d %d/%d/%d",
+                       &a,&t[0],&na, &b,&t[1],&nb, &c,&t[2],&nc);
+                faces.push_back(new face(na,a,b,c,t[0],t[1],t[2],curmat));
+            }
+            else
+            {
+                sscanf(coord[i]->c_str(),"f %d %d %d",&a,&b,&c);
+                faces.push_back(new face(-1,a,b,c,0,0,0,curmat));					
+            }
+        }
+    }
+}
+	else if((*coord[i])[0]=='u' && (*coord[i])[1]=='s' && (*coord[i])[2]=='e')
 	{
 		char tmp[200];
 		sscanf(coord[i]->c_str(),"usemtl %s",tmp);
 		if(strcmp(tmp,"collision")==0)
 		{
 			coll=true;
-		}else{
+		}
+		else{
 			coll=false;
 			for(int i=0;i<materials.size();i++)
 			{
@@ -308,7 +387,7 @@ int objloader::load(const std::string& filename,std::vector<collisionplane>* col
 		else
 			istexture=true;
 		out << "2....." << std::endl;
-		isnormals=false;
+		isnormals=true;
          GLfloat blanc[] = {0.7f, 0.7f, 0.7f, 1.0f};
 		if(faces[i]->four)
 		{
@@ -363,43 +442,39 @@ int objloader::load(const std::string& filename,std::vector<collisionplane>* col
 		}else{
 
 
-			glBegin(GL_TRIANGLES);
-			  glColor4fv(blanc);
-							
-				if(isnormals)
-					glNormal3f(normals[faces[i]->facenum-1]->x,normals[faces[i]->facenum-1]->y,normals[faces[i]->facenum-1]->z);
+		glBegin(GL_TRIANGLES);
 
-				if(istexture && materials[faces[i]->mat]->texture!=-1)
-					glTexCoord2f(texturecoordinate[faces[i]->texcoord[0]-1]->u,texturecoordinate[faces[i]->texcoord[0]-1]->v);
-  glColor4fv(blanc);
-								  
-				if(isvertexnormal)
-					glNormal3f(vertexnormals[faces[i]->faces[0]-1]->x,vertexnormals[faces[i]->faces[0]-1]->y,vertexnormals[faces[i]->faces[0]-1]->z);
+    // --- Sommet 1 ---
+    if (istexture && materials[faces[i]->mat]->texture != -1)
+        glTexCoord2f(texturecoordinate[faces[i]->texcoord[0]-1]->u,
+                     texturecoordinate[faces[i]->texcoord[0]-1]->v);
 
+		glNormal3f(normals[faces[i]->facenum-1]->x,normals[faces[i]->facenum-1]->y,normals[faces[i]->facenum-1]->z);
 
-				glVertex3f(vertex[faces[i]->faces[0]-1]->x,vertex[faces[i]->faces[0]-1]->y,vertex[faces[i]->faces[0]-1]->z);
-				
-				if(istexture && materials[faces[i]->mat]->texture!=-1)
-					glTexCoord2f(texturecoordinate[faces[i]->texcoord[1]-1]->u,texturecoordinate[faces[i]->texcoord[1]-1]->v);
-				
-			glColor4fv(blanc);
-								    
-				if(isvertexnormal)
-					glNormal3f(vertexnormals[faces[i]->faces[1]-1]->x,vertexnormals[faces[i]->faces[1]-1]->y,vertexnormals[faces[i]->faces[1]-1]->z);
-				
-				glVertex3f(vertex[faces[i]->faces[1]-1]->x,vertex[faces[i]->faces[1]-1]->y,vertex[faces[i]->faces[1]-1]->z);
-				
-				
-				if(istexture && materials[faces[i]->mat]->texture!=-1)
-					glTexCoord2f(texturecoordinate[faces[i]->texcoord[2]-1]->u,texturecoordinate[faces[i]->texcoord[2]-1]->v);
+    if (isvertexnormal)
+         glNormal3f(vertexnormals[faces[i]->faces[0]-1]->x,vertexnormals[faces[i]->faces[0]-1]->y,vertexnormals[faces[i]->faces[0]-1]->z);
 
- glColor4fv(blanc);
-								
-				if(isvertexnormal)
-					glNormal3f(vertexnormals[faces[i]->faces[2]-1]->x,vertexnormals[faces[i]->faces[2]-1]->y,vertexnormals[faces[i]->faces[2]-1]->z);
-		
-				glVertex3f(vertex[faces[i]->faces[2]-1]->x,vertex[faces[i]->faces[2]-1]->y,vertex[faces[i]->faces[2]-1]->z);
-			glEnd();
+ glVertex3f(vertex[faces[i]->faces[0]-1]->x,vertex[faces[i]->faces[0]-1]->y,vertex[faces[i]->faces[0]-1]->z);
+    // --- Sommet 2 ---
+    if (istexture && materials[faces[i]->mat]->texture != -1)
+        glTexCoord2f(texturecoordinate[faces[i]->texcoord[1]-1]->u,
+                     texturecoordinate[faces[i]->texcoord[1]-1]->v);
+
+    if (isvertexnormal)
+        glNormal3f(vertexnormals[faces[i]->faces[1]-1]->x,vertexnormals[faces[i]->faces[1]-1]->y,vertexnormals[faces[i]->faces[1]-1]->z);
+    glVertex3f(vertex[faces[i]->faces[1]-1]->x,vertex[faces[i]->faces[1]-1]->y,vertex[faces[i]->faces[1]-1]->z);
+
+    // --- Sommet 3 ---
+    if (istexture && materials[faces[i]->mat]->texture != -1)
+        glTexCoord2f(texturecoordinate[faces[i]->texcoord[2]-1]->u,
+                     texturecoordinate[faces[i]->texcoord[2]-1]->v);
+
+    if (isvertexnormal)
+         glNormal3f(vertexnormals[faces[i]->faces[2]-1]->x,vertexnormals[faces[i]->faces[2]-1]->y,vertexnormals[faces[i]->faces[2]-1]->z);
+
+  glVertex3f(vertex[faces[i]->faces[2]-1]->x,vertex[faces[i]->faces[2]-1]->y,vertex[faces[i]->faces[2]-1]->z);
+
+glEnd();
 			
 		}
 	}
@@ -452,8 +527,9 @@ objloader::~objloader()
 
 GLuint objloader:: loadTexture(const char * filename,bool useMipMap = true)
 {
+
 	GLuint num;
- glGenTextures(1,&num);
+ 	glGenTextures(1,&num);
 	SDL_Surface* img=IMG_Load(filename);
 	glBindTexture(GL_TEXTURE_2D,num);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
@@ -465,6 +541,7 @@ GLuint objloader:: loadTexture(const char * filename,bool useMipMap = true)
 	loadedTextures.push_back(filename);
 	loadedTexturesNum.push_back(num);
 	return num;
+
 }
 	/*unsigned int num;
 	glGenTextures(1,&num);
@@ -542,8 +619,29 @@ void objloader::loadAnimation(std::vector<unsigned int>& frames, std::string fil
 	
 		std::string tmp2(filename+tmp);
 		tmp2+=".obj";
-		unsigned int id=load(tmp2,&collP);
+		unsigned int id=load(tmp2);
 		frames.push_back(id);		
 	 } 
 }
 
+float objloader::getHeightAt(float x, float z) {
+    float minDist = 1e9;
+    float height = 0;
+
+    for (const CollisionTriangle& tri : collisionMesh) {
+        // Vérifier si (x,z) est au-dessus du triangle (proj. sur XZ)
+        // Interpolation barycentrique pour Y
+        vector3d p(x,0,z);
+        vector3d a(tri.v0.x,0,tri.v0.z);
+        vector3d b(tri.v1.x,0,tri.v1.z);
+        vector3d c(tri.v2.x,0,tri.v2.z);
+
+        float u,v,w;
+        if (barycentricXZ(p, a, b, c, u,v,w)) {
+            float y = u*tri.v0.y + v*tri.v1.y + w*tri.v2.y;
+            return y; // Hauteur du terrain sous la voiture
+        }
+    }
+
+    return height; // Si aucune projection trouvée
+}

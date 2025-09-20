@@ -1,9 +1,9 @@
 #include"aicar.h"
 
-carAI::carAI(std::vector<unsigned int>& anim,float sp,collisionsphere css)
+carAI::carAI(std::vector<unsigned int>& anim,float sp)
  {
  	frames=anim;
-	cs=css;
+
 	speed=sp;
 
 
@@ -11,12 +11,12 @@ carAI::carAI(std::vector<unsigned int>& anim,float sp,collisionsphere css)
  carAI::~carAI()
  {
  }
- void carAI::update(std::vector<collisionplane>& collplane)
+ void carAI::update()
  {
 
-			vector3d newPos(cs.center);
+			/*vector3d newPos(cs.center);
 			newPos.y-=0.5f;
-	 		newPos+=direction*speed;
+	 		newPos+=direction*speed;*/
 	 	/*	rotation.z=std::acos(-direction.x);
 	 				if(direction.z>0)
 	 				{
@@ -24,10 +24,10 @@ carAI::carAI(std::vector<unsigned int>& anim,float sp,collisionsphere css)
 					 }
 					 */
 
-	 		for(int i=0;i<collplane.size();i++)
-				collision::sphereplane(newPos,collplane[i].normal,collplane[i].p[0],collplane[i].p[1],collplane[i].p[2],collplane[i].p[3],cs.r);
+	 	//	for(int i=0;i<collplane.size();i++)
+		//		collision::sphereplane(newPos,collplane[i].normal,collplane[i].p[0],collplane[i].p[1],collplane[i].p[2],collplane[i].p[3],cs.r);
 	 			
-	 		setLocation(newPos);
+	 	//	setLocation(newPos);
 	 		
 					 curFrame+=0.08f;
 					 if( curFrame>=100)
@@ -40,7 +40,7 @@ carAI::carAI(std::vector<unsigned int>& anim,float sp,collisionsphere css)
  void carAI::show()
  {
  	glPushMatrix();
-		glTranslatef(cs.center.x,cs.center.y,cs.center.z);
+	//	glTranslatef(cs.center.x,cs.center.y,cs.center.z);
 
 	 	glRotatef(-rotation.x*(180/pi),1,0,0);
 	 	glRotatef(-rotation.y*(180/pi),0,1,0);
@@ -50,12 +50,9 @@ carAI::carAI(std::vector<unsigned int>& anim,float sp,collisionsphere css)
 	 	glPopMatrix();
 
  }
- collisionsphere * carAI::getCollisionSphere()
-		{
-				return &cs;
-		}
+
 		void carAI::setLocation(vector3d newLoc)
 		{
-			cs.center=newLoc;
+		//	cs.center=newLoc;
 		}
 

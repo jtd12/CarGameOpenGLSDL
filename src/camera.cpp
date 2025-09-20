@@ -41,6 +41,8 @@ dec=0.09;
 	up=0;
 	down=0;
 	a=0;
+	yaw=false;
+	pitch=false;
 }
 camera::camera(vector3d l)
 {
@@ -58,6 +60,8 @@ dec=0.09;
 	up=0;
 	down=0;
 	a=0;
+	yaw=false;
+	pitch=false;
 }
 
 camera::camera(vector3d l,float yaw,float pitch)
@@ -76,6 +80,8 @@ dec=0.09;
 	up=0;
 	down=0;
 	a=0;
+	yaw=false;
+	pitch=false;
 }
 
 camera::camera(vector3d l,float yaw,float pitch,float mv,float mov)
@@ -93,6 +99,8 @@ dec=0.09;
 	up=0;
 	down=0;
 	a=0;
+	yaw=false;
+	pitch=false;
 }
 
 void camera::Control()
@@ -105,30 +113,16 @@ void camera::Control()
 		SDL_ShowCursor(SDL_DISABLE);
 		int tmpx,tmpy;
 		SDL_GetMouseState(&tmpx,&tmpy);
-		camYaw+=mousevel*(MidX-tmpx);
-		camPitch+=mousevel*(MidY-tmpy);
+		camYaw=mousevel*(MidX-tmpx);
+		camPitch=mousevel*(MidY-tmpy);
+		 
 		lockCamera();
-		SDL_WarpMouse(MidX,MidY);
-		Uint8* state=SDL_GetKeyState(NULL);
+	
+
 		ismoved=false;
 	
 				
-		if(state[SDLK_w])
-		{
-			
 	
-			up=1;
-			
-				ismoved=true;
-
-			
-			//moveCameraUp(0.0);
-		}
-	
-		else if(state[SDLK_w]==false)
-		{
-			up=0;
-		}
 	
 	}
 
@@ -136,10 +130,14 @@ void camera::Control()
 
 			
     //glTranslated(-loc.x,-loc.y,-loc.z);
-	glRotatef(-camPitch,1.0,0.0,0.0);
-	glRotatef(-camYaw,0.0,1.0,0.0);
+
+	  glRotatef(-camPitch,1.0,0.0,0.0);
 	
 
+	  glRotatef(-camYaw,0.0,1.0,0.0);
+	
+	
+  
 	
 }
 
@@ -221,15 +219,22 @@ float camera::getYaw()
 }
 void camera::setYaw(float cYaw)
 {
-	camYaw+=cYaw;
+	if(yaw)
+	  camYaw+=cYaw;
+	if(yaw2)
+	  camYaw-=cYaw;
 }
 void camera::setYawReset(float cYaw)
 {
-	camYaw=cYaw;
+
+	  camYaw=cYaw;
 }
 void camera::setPitch(float cYaw)
 {
-	camPitch+=cYaw;
+	if(pitch)
+	  camPitch+=cYaw;
+	if(pitch2)
+	  camPitch-=cYaw;
 }
 void camera::setPitchReset(float cYaw)
 {
@@ -275,3 +280,33 @@ bool camera::isMoved()
 {
 	return ismoved;
 }
+
+bool camera::getPitch_()
+{
+	return pitch;
+}
+
+bool camera::getYaw_()
+{
+	return yaw;
+}
+
+void camera::setPitch(bool b)
+{
+	pitch=b;
+}
+void camera::setYaw(bool b)
+{
+	yaw=b;
+}
+
+void camera::setPitch2(bool b)
+{
+	pitch2=b;
+}
+void camera::setYaw2(bool b)
+{
+	yaw2=b;
+}
+
+
