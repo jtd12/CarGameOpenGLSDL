@@ -2,9 +2,24 @@
 
 game::game()
 {
-	
-	
-  
+	/*
+	Sphere car;
+car.center = vector3d(0,2,0); // position
+car.radius = 1.0f;
+
+// Mesh chargé depuis ton .obj
+std::vector<Triangle> mesh = loadObjAsTriangles("decor.obj");
+
+// Déplacement tentative
+vector3d move(0.1f, -0.2f, 0.0f);
+car.center = car.center + move;
+
+// Vérif collision
+if (collideSphereMesh(car, mesh)) {
+    // car.center a été corrigé automatiquement
+    // tu peux aussi ajuster la vitesse (annuler la composante normale)
+}
+ */ 
 		initSDL();
 
 
@@ -27,37 +42,42 @@ game::game()
        
       //	initskybox();
       	std::vector<collisionplane> mapcp;
-     
+      	
+   
       	std::vector<vector3d> mapsp;
       	mapsp.push_back(vector3d(0.1,0.2,0.1));
       	
-       unsigned int map=obj.load("data/decor/map.obj",&mapcp);
-    unsigned int map2=obj.load("data/decor/map2.obj",&mapcp);
-     unsigned int map3=obj.load("data/decor/map3.obj",&mapcp);
-          unsigned int map4=obj.load("data/decor/map4.obj",&mapcp);
-            unsigned int map5=obj.load("data/decor/map5.obj",&mapcp);
-         unsigned int map6=obj.load("data/decor/collision_01.obj",&mapcp);
-       
-   
-        unsigned int map11=obj.load("data/decor/sky.obj",&mapcp); 
-        
+       unsigned int map=obj.load("data/decor/map.obj");
+    unsigned int map2=obj.load("data/decor/map2.obj");
+     unsigned int map3=obj.load("data/decor/map3.obj");
+          unsigned int map4=obj.load("data/decor/map4.obj");
+            unsigned int map5=obj.load("data/decor/map5.obj");
+            unsigned int map6=obj.load("data/decor/sky.obj");
+ 			unsigned int map7=obj.load("data/decor/map6.obj");
+ 			
       levels.push_back(new level("name",map,mapcp,mapsp));
         levels.push_back(new level("name",map2,mapcp,mapsp));
                levels.push_back(new level("name",map3,mapcp,mapsp));
                 levels.push_back(new level("name",map4,mapcp,mapsp));
                  levels.push_back(new level("name",map5,mapcp,mapsp));
-                    levels.push_back(new level("name",map6,mapcp,mapsp));
-  	
-                   levels.push_back(new level("name",map11,mapcp,mapsp));      
+                levels.push_back(new level("name",map6,mapcp,mapsp));
+                levels.push_back(new level("name",map7,mapcp,mapsp));
+				terrain=new objloader();
+      			terrain->load("data/decor/collision_01.obj");
+      			terrain2=new objloader();
+      			terrain2->load("data/decor/collision_02.obj");
+
+
 					 
-                unsigned int mesh=obj.load("",&mapcp);
-               	vehicule.push_back(new car(mesh,"voiture",collisionsphere(vector3d(-350,50,65),3.2),0.02,0.0,0.7));
+                unsigned int mesh=obj.load("data/car.obj");
+               	vehicule.push_back(new car(mesh,"voiture",0.02,0.0,0.7,terrain));
       //weapons.push_back(new weapon())
-    playerCam_=new playerCam("player1",collisionsphere(vector3d(-350,60,75),30.0),0.02,3.0,0.2);
+    playerCam_=new playerCam("player1",0.02,3.0,0.2);
     joystick=SDL_JoystickOpen(0);
     music=Mix_LoadMUS("data/audio/background.mp3");
     audio();
-  
+  captureVideo_=new captureVideo(screenWidth, screenHeight, 60, "output.mp4");
+ frameIndex = 0;
  
  //std::vector<unsigned int> anim;
  //obj.loadAnimation(anim, "data/object/carsAI",100);
@@ -144,6 +164,7 @@ game::~game()
 	delete playerCam_;
 		for(int i=0;i<vehicule.size();i++)
 	delete vehicule[i];
+	delete captureVideo_;
 delete screen;
 Mix_FreeMusic(music);
 Mix_CloseAudio();
@@ -189,174 +210,94 @@ void game::start()
         }
         break;
                     	case SDL_JOYAXISMOTION:
-                        	
-                        
 							
-                        				if( event.jaxis.which == 0 )
+                        if( event.jaxis.which == 0 )
 						{	
-					
-					
-			
-							 if(event.jaxis.axis==5)
-									{
-						
-                        	
-						
-								if(event.jaxis.value>8000 )
-									{
-							
-								
-						vehicule[0]->setDOWN(1);
-						
-						
-							
-						}
-							
-					
-					if(event.jaxis.value<-32000 && event.jaxis.value>-33000  )
-									
-					{
-							vehicule[0]->setDOWN(0);
-									
-						
-					}
-					
-					
-						
-							
-						
-			}
-							
-				  if(event.jaxis.axis==2)
-									{
-						
-                        	
-						
-								if(event.jaxis.value>8000 )
-									{
-							
-								
-						vehicule[0]->setUP(1);
-						
-						
-							
-						}
-							
-					
-					if(event.jaxis.value<-32000 && event.jaxis.value>-33000  )
-									
-					{
-							vehicule[0]->setUP(0);
-									
-						
-					}
-					
-					
-						
-							
-						
-			}
-						 		
-				 if(event.jaxis.axis==0)
-						{
-									if(event.jaxis.value>8000 || event.jaxis.value<-8000)
-									{
-									if(vehicule[0]->getSpeed()!=0)
-									 vehicule[0]->setjoy((event.jaxis.value*-0.0002f)*-vehicule[0]->getSpeed()/vehicule[0]->getMaxSpeed());
-									 vehicule[0]->setTurn(1);
-						}
-								else
-								{
-								vehicule[0]->setTurn(0);
-							
-							}
-								
-							
-				//vehicule[0]->angle-=(event.jaxis.value*0.0005f)*-vehicule[0]->speed/vehicule[0]->maxSpeed;
-			
-				 }
-				 
-	
-					
-					
-				 if(event.jaxis.axis==3)
-									{
-						
-                        		if(event.jaxis.value>8000 )
-                        		{
-							
-                        		
-								
-							playerCam_->setAroundTouch(1);
-						
-							
-						}
-						
-						else	if(event.jaxis.value<-8000 )
-                        		{
-							
-                        		
-								
-							playerCam_->setAroundTouch2(1);
-						
-							
-						}
-					
-						
-			
-								else
-								{
-			
-									playerCam_->setAroundTouch(0);
-									playerCam_->setAroundTouch2(0);
-								}
-									
-						
-							
-					
-										
-						
-						
-				 }
-					
-						 if(event.jaxis.axis==4)
-									{
-						
-                        		if(event.jaxis.value>8000 )
-                        		{
-							
-                        		
-								
-							playerCam_->setAroundTouch3(1);
-						
-							
-						}
-					
-								else if(event.jaxis.value<-8000 )
-                        		{
-							
-                       	
-									playerCam_->setAroundTouch4(1);
-								
-							
-						}		
-			
-			
-						else
-						{
-									playerCam_->setAroundTouch3(0);
-									
-								playerCam_->setAroundTouch4(0);
-							
-					
-										
-						}
-						
-					
-					
+				 if (event.jaxis.axis == 1) { // ton axe combiné (à vérifier avec printf)
+		        int val = event.jaxis.value;
+		
+		        // Zone morte centrale
+		        if (val > -5000 && val < 5000) {
+		            vehicule[0]->setUP(0);
+		            vehicule[0]->setDOWN(0);
+		        }
+		        // Accélérateur
+		        else if (val > -5000) {
+		            vehicule[0]->setUP(1);
+		            vehicule[0]->setDOWN(0);
+		        }
+		        // Frein
+		        else if (val < 5000) {
+		            vehicule[0]->setDOWN(1);
+		            vehicule[0]->setUP(0);
+		        }
+		    }
+		    
+		      if (event.jaxis.axis == 0) { // axe volant gauche/droite (à vérifier avec printf)
+		        int val = event.jaxis.value;
+		
+		        // Deadzone pour éviter de déclencher en ligne droite
+		        if (val < -5000) { 
+		            vehicule[0]->setLEFT(1);
+		            vehicule[0]->setRIGHT(0);
+		        }
+		        else if (val > 5000) {
+		            vehicule[0]->setRIGHT(1);
+		            vehicule[0]->setLEFT(0);
+		        }
+		        else {
+		            vehicule[0]->setLEFT(0);
+		            vehicule[0]->setRIGHT(0);
+		        }
+		    }
+		    
+		    if(event.jaxis.axis == 2)
+		    {
+		    	 int val = event.jaxis.value;
+		    	 
+		    	 if (val < -5000) { 
+		            playerCam_->cam.setYaw(true);
+		            playerCam_->cam.setYaw2(false);
+		        }
+		        else if (val >5000) { 
+		            playerCam_->cam.setYaw(false);
+		            playerCam_->cam.setYaw2(true);
+		        }
+		        else
+		        {
+		        playerCam_->cam.setYaw(false);
+		        playerCam_->cam.setYaw2(false);
 				}
-		 }
-				
+		    
+			}
+			
+			  if(event.jaxis.axis == 3)
+		    {
+		    	 int val = event.jaxis.value;
+		    	 
+		    	 if (val < -5000) { 
+		            playerCam_->cam.setPitch(true);
+		            playerCam_->cam.setPitch2(false);
+		        }
+		        else if (val >5000) { 
+		            playerCam_->cam.setPitch(false);
+		            playerCam_->cam.setPitch2(true);
+		        }
+		        else
+		        {
+		        playerCam_->cam.setPitch(false);
+		        playerCam_->cam.setPitch2(false);
+				}
+		    
+			}
+		    }
+							
+							
+					
+								
+			
+							
+				  
 								break;
 								case SDL_JOYBUTTONDOWN:
 								if(event.jbutton.button==0)
@@ -449,7 +390,11 @@ void game::start()
                    }
 			
 		}
-	 if(vehicule[0]->getTurn())
+		
+			playerCam_->cam.setPitch(1.5f);
+			playerCam_->cam.setYaw(1.5f);
+		
+	 		if(vehicule[0]->getTurn())
                	vehicule[0]->setJoyTurnSpeed(1);
                	
                	else
@@ -457,7 +402,7 @@ void game::start()
      
                 update();
                 show();
-            
+       
               	SDL_GL_SwapWindow(pWindow);
 
 
@@ -479,11 +424,18 @@ void game::start()
 
 void game::update()
 {
+	
 
-     	playerCam_->update(levels[0]->getCollisionPlanes());
-		playerCam_->orbit();
+		captureVideo_->captureFrame();
+
+     //	playerCam_->update(levels[5]->getCollisionPlanes());
+		//playerCam_->orbit();
       	for(int i=0;i<vehicule.size();i++)
-      	  vehicule[i]->update(levels[0]->getCollisionPlanes());
+      	  vehicule[i]->update(terrain->collisionMesh,terrain);
+      	
+      	for(int i=0;i<vehicule.size();i++)
+      	  vehicule[i]->update2(terrain2->collisionMesh);
+      	  
       	for(int i=0;i<vehicule.size();i++)
       	  vehicule[i]->control();
       for(int i=0;i<levels.size();i++)
@@ -495,9 +447,9 @@ void game::update()
 
 void game::lighting()
 {
-	GLfloat ambient[] = {0.3f,0.2f,0.2f,0.9f};
-            GLfloat diffuse[] = {1.0f,1.0f,1.0f,1.0f};
-            GLfloat light0_position [] = {0.0f, 5.0f, 1000.0f, 10.0f};
+	GLfloat ambient[] = {0.9f,0.5f,0.8f,0.9f};
+            GLfloat diffuse[] = {0.2f,0.0f,1.0f,1.0f};
+            GLfloat light0_position [] = {0.0f, 500.0f, 100.0f, 10.0f};
             GLfloat specular_reflexion[] = {0.9f,0.9f,0.9f,1.0f};
             GLubyte shiny_obj = 128;
 
@@ -599,7 +551,7 @@ void game::show()
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         glLoadIdentity();
 
-               
+
 
       // playerCam_->cam.setLocation(vector3d(vehicule[0]->getLocation().x+5*cos(vehicule[0]->getRotation().x*M_PI/180),vehicule[0]->getLocation().y+12,vehicule[0]->getLocation().z+5*sin(vehicule[0]->getRotation().z*M_PI/180)));
 		//Control(0.2,0.2,mousein);
@@ -620,22 +572,21 @@ void game::show()
  		lighting();
 //playerCam_->cam.UpdateCamera();
 
-           for(int i=0;i<levels.size()-1;i++)
+
+           for(int i=0;i<levels.size();i++)
 		
       	    levels[i]->show();
-   
-      	for(int i=0;i<vehicule.size();i++)
+      	    
+   	for(int i=0;i<vehicule.size();i++)
       	  vehicule[i]->show();
       
-      glDisable(GL_LIGHTING);
-      for(int i=6;i<levels.size();i++)
-       levels[i]->show();
+   
           
       	  SDL_Color color = {255, 0, 0, 0}; // Red
       	  
       	  SDL_Color color2 = {255, 50, 100, 0}; // Red
 		glPushMatrix();
-	  	RenderText("vitesse:"+float2str(vehicule[0]->getSpeed()*-20.0f), color, -1.0, 0.9,0.1,0.5, 50);
+	  	RenderText("vitesse:"+float2str(vehicule[0]->getSpeed()*-50.0f), color, -1.0, 0.9,0.1,0.5, 50);
 		RenderText("angle:"+float2str(vehicule[0]->getJoy()), color2, 1.0, 0.2,0.1,0.1, 50);
 		glPopMatrix();
 	

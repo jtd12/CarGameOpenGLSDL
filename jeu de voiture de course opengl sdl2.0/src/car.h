@@ -11,13 +11,15 @@
 #include<vector>
 #include<math.h>
 #include"collision.h"
+#include <cfloat>   // pour FLT_MAX
 #define ni 8
+
+inline float myMax(float a, float b);
 
 class car
 {
 	int mesh;
 	std::string name;
-	collisionsphere cs;
 	int health;
 	vector3d force;
 	vector3d direction;
@@ -44,12 +46,16 @@ class car
 	bool  joyInputActive;
 	bool joyTurn;
 	camera cam;
+	vector3d velocity;
+	Sphere carSphere;
 	public:
 
-car(unsigned int name, const char* n,collisionsphere ccs, float sprints,float normals,float looks);
+car(unsigned int name, const char* n, float sprints,float normals,float looks,objloader* terrain);
 		~car();
-		void update(std::vector<collisionplane>& collplane);
+		void update(const std::vector<CollisionTriangle>& collisionMesh,objloader* terrain);
+		void update2(const std::vector<CollisionTriangle>& collisionMesh);
 		void show();
+		bool checkCollisionCarVsMesh(const car& car_, const objloader& obj);
 		void setPosition(vector3d pos);
 			void setLocation(vector3d vec);
 			vector3d getLocation();

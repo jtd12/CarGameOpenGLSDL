@@ -13,6 +13,7 @@
 #include"vector.h"
 #include"collisionplane.h"
 #include"collisionsphere.h"
+#include"captureVideo.hpp"
 #include"camera.h"
 #include"level.h"
 #include"player.h"
@@ -26,7 +27,8 @@ class game
 	 int screenWidth=960;
      int screenHeight=540;
 	objloader obj;
-	
+	objloader* terrain;
+	objloader* terrain2;
 
     SDL_Window* pWindow{ nullptr };     
     SDL_Renderer* pRenderer{ nullptr };
@@ -50,7 +52,8 @@ class game
 	void Vecteur_Unite(float vector[3]);
 	void lighting();
 	std::string float2str(float x);
-	
+	captureVideo* captureVideo_;
+	int frameIndex;
 	
 	public:
 		game();

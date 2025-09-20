@@ -1,14 +1,18 @@
 #include"car.h"
 
-car::car(unsigned int name_, const char* n,collisionsphere ccs, float sprints,float normals,float looks)
+car::car(unsigned int name_, const char* n, float sprints,float normals,float looks,objloader* terrain)
 	{
 		mesh=name_;
 		name=n;
-		cs=ccs;
 		sprintspeed=sprints;
 		normalspeed=normals;
-		force.change(0.0,-0.5,0.0);
-		setPosition(vector3d(cs.center));
+		loc.x = 20;
+		loc.z = 100;
+		carSphere = { loc, 10.0f };
+		
+		// Mettre à jour la hauteur et la sphère
+		loc.y = terrain->getHeightAt(loc.x, loc.z) +30.0f;
+		carSphere.center = loc;
 		setSpeed(normalspeed,looks);
 		points=0;
 		energy=10;
@@ -16,11 +20,11 @@ car::car(unsigned int name_, const char* n,collisionsphere ccs, float sprints,fl
 		health=100;
 		speed=normals;
 		angle=0;
-		maxSpeed=8.0;
-		acc=0.04;
-		dec=0.05;
-		dec2=0.25;
-		turnSpeed=5.1;
+		maxSpeed=3.5f;
+		acc=0.008f;
+		dec=0.005;
+		dec2=0.08;
+		turnSpeed=3.0f;
 		up=0;
 		down=0;
 		left=0;
@@ -29,6 +33,8 @@ car::car(unsigned int name_, const char* n,collisionsphere ccs, float sprints,fl
 		s=0;
 		a=vector3d(0,0,0);
 		a_touch=0;
+		 velocity=vector3d(0,0,0);
+		
 		//weapons.push_back(wep);
 	//	curWeapon=0;
 		//isWeapon=true;
@@ -41,48 +47,152 @@ car::car(unsigned int name_, const char* n,collisionsphere ccs, float sprints,fl
 
 		glTranslated(getLocation().x,getLocation().y,getLocation().z);
 		glRotated(getRotation().y,0,1.0,0);
-			//glCallList(mesh);
+		glCallList(mesh);
 		
-			glPopMatrix();
+		glPopMatrix();
 	}
 		car::~car()
 		{
 		}
-		void car::update(std::vector<collisionplane>& collplane)
-		{
-				if(getLocation().y<5)
-		{
-			setPosition(vector3d(getLocation().x,20,getLocation().z));
 		
-		
-		}
-		if(direction.y>=force.y)
-			
-				direction+=force;
-			//setPosition(cs.center+direction);	
-			vector3d newPos(getLocation());
-			newPos+=direction;
-			for(int i=0;i<collplane.size();i++)
-				collision::sphereplane(newPos,collplane[i].normal,collplane[i].p[0],collplane[i].p[1],collplane[i].p[2],collplane[i].p[3],cs.r);
+
+
+
+		void car::update(const std::vector<CollisionTriangle>& collisionMesh,objloader* terrain)
+		{
+	bool collisionFloor=false;
+
+	float dist;
+	float dt = 0.16f;
+	int subSteps = 3;  // plus de sous-pas = moins de risque de traverser
+    float stepDt = dt / subSteps;
+    
+	
+
+    for (int i = 0; i < subSteps; i++)
+    {
+        // Déplacement provisoire (sans gravité pour l'instant)
+        vector3d nextLoc = loc + velocity * stepDt;
+
+        // Détection du terrain
+        float rayStartY = std::max(loc.y, nextLoc.y) + carSphere.radius + 30.0f;
+        vector3d rayStart(loc.x, rayStartY, loc.z);
+        float terrainY = collision::raycastDown(rayStart, terrain->collisionMesh);
+
+        if (terrainY != -FLT_MAX) 
+        {
+            float minHeight = terrainY + carSphere.radius;        // juste au-dessus du sol
+            float maxHeight = terrainY + carSphere.radius + 2.0f; // limite max
+
+            if (nextLoc.y < minHeight) 
+            {
+                // ?? Sous le sol ? replacer et PAS de gravité
+                nextLoc.y = minHeight;
+                velocity.y = 0;
+                isground = true;
+            }
+       
+            else if (nextLoc.y > maxHeight) 
+            {
+                // ? Trop haut ? limiter
+                nextLoc.y = maxHeight;
+                velocity.y = 0;
+                isground = true;
+            }
+            else 
+            {
+            	
+            	if(nextLoc.y>0)
+            	{
 				
-				 if(getLocation().y<newPos.y)
-				  isground=true;
-				  else
-				   isground=false;
-		    	setPosition(newPos);
+                // ? Dans l’air au-dessus du sol ? appliquer gravité
+                velocity.y += -9.81f * stepDt;
+                isground = false;
+            }
+            }
+        }
+        else
+        {
+            //
+			if(nextLoc.y>0)
+            	{
+			
+            velocity.y += -9.81f * stepDt;
+            isground = false;
+        }
+        }
+
+        // Mise à jour position
+        loc = nextLoc;
+        carSphere.center = loc;
+        
+        
+	if (loc.y < 0.0f) {
+	    loc.y += 20.0f;      // remonter de 10 unités
+	    velocity.y = 0.0f;   // annuler toute vitesse verticale
+	    isground = true;
+	    carSphere.center = loc; // mettre à jour la sphère aussi
+	}
 	
-			//setPosition(cs.center+direction);	
-		
-		
-		    /*	if(isWeapon)
-		    	
-		        	weapons[curWeapon]->update();
-					*/
+	if (loc.y > 40.0f) {
+    loc.y = 40.0f;       // limite max
+    velocity.y = 0.0f;   // on annule la vitesse verticale
+    carSphere.center = loc; // mise à jour de la sphère
 		}
+	}	
+
+    
+
+}
 	
+	
+	void car::update2(const std::vector<CollisionTriangle>& collisionMesh)
+	{
+
+	bool collisionBlock=false;
+	float dist;
+	float dt = 0.16f;
+	int subSteps = 3;  // plus de sous-pas = moins de risque de traverser
+    float stepDt = dt / subSteps;
+    
+
+
+    // Mouvement provisoire
+    vector3d nextLoc = loc + velocity * stepDt;
+    
+    
+	for (const auto& tri : collisionMesh) {
+ 
+	
+	    float dist = collision::distancePointTriangle(loc, tri.v0, tri.v1, tri.v2);
+	   if (dist < 5) {
+        // collision !
+        	vector3d edge1 = tri.v1 - tri.v0;
+            vector3d edge2 = tri.v2 - tri.v0;
+            vector3d normal = edge1.crossproduct(edge2);
+            normal.normalize();
+
+        float push = carSphere.radius - dist + 0.01f;
+
+        // repousse la voiture dans la direction du normal du bloc
+        loc += normal * push;
+
+        // corrige la vitesse pour éviter de retraverser
+        velocity -= normal * velocity.dotproduct(normal);
+
+        std::cout << "Collision bloc !" << std::endl;
+    }
+}
+carSphere.center = loc;
+
+  
+
+}
+
+
 		void car::setPosition(vector3d pos)
 		{
-			cs.center=pos;
+		//	cs.center=pos;
 			setLocation(pos);
 		}
 	
@@ -105,8 +215,28 @@ void car::setLocation(vector3d vec)
 }
    void car::move()
    {
-    loc.x -= cos(a.y*M_PI/180) * s;
-    loc.z += sin(a.y*M_PI/180) * s;
+ 	vector3d forward;
+    forward.x = cos(angle * M_PI / 180.0f);
+    forward.z = sin(angle * M_PI / 180.0f);
+
+
+	velocity.x += forward.x * s;
+    velocity.z += forward.z * s;
+	// projection dans l’axe avant et latéral
+	float dotForward = velocity.x * forward.x + velocity.z * forward.z;
+	vector3d forwardVel = forward * dotForward;
+	vector3d sideVel = velocity - forwardVel;
+	
+	// friction latérale (glissement contrôlé)
+	sideVel *= 0.6f;  // plus petit = adhérence forte, plus grand = drift
+	
+	velocity = forwardVel + sideVel;
+	
+    velocity *= 0.6f;
+    
+	// mise à jour position
+	loc.x -= velocity.x;
+	loc.z += velocity.z;
   
    }
    
@@ -285,25 +415,20 @@ void car::control()
 					speed=0;
 				}
 			}
-	if(joyTurn)
-	{
-		angle+=speedJoy;
-	}
-		if(right)
-	{
 
-		angle+=turnSpeed*(speed/maxSpeed);
-		//angle=turnSpeed;
-		
-
+	float steerFactor = 0.4f + 0.6f * (fabs(speed) / maxSpeed); // min 0.4, max 1
+	if(right) angle -= turnSpeed * steerFactor;
+	if(left)  angle += turnSpeed * steerFactor;
 	
-	
-	//	+=turnSpeed*(speed/maxSpeed);
-	}
-		if(left)
+	  // ?? pénalité réaliste en virage
+	    if(left || right)
 	{
-		angle-=turnSpeed*(speed/maxSpeed);
+	    float turnIntensity = fabs(speed / maxSpeed);
+	    float penalty = 1.0f - (0.005f * turnIntensity); // plus faible
+	    speed *= penalty;
 	}
+
+
 		s=speed;
 		a.y=angle;
 		move();
@@ -383,7 +508,7 @@ bool car::getTurn()
  }
  float car::getJoy()
  {
- 	return speedJoy;
+ 	return angle;
  }
 float car::getMaxSpeed()
 {
