@@ -71,13 +71,35 @@ if (collideSphereMesh(car, mesh)) {
 					 
                 unsigned int mesh=obj.load("data/car.obj");
                	vehicule.push_back(new car(mesh,"voiture",0.02,0.0,0.7,terrain));
-      //weapons.push_back(new weapon())
-    playerCam_=new playerCam("player1",0.02,3.0,0.2);
-    joystick=SDL_JoystickOpen(0);
-    music=Mix_LoadMUS("data/audio/background.mp3");
-    audio();
-  captureVideo_=new captureVideo(screenWidth, screenHeight, 60, "output.mp4");
- frameIndex = 0;
+			      //weapons.push_back(new weapon())
+			    playerCam_=new playerCam("player1",0.02,3.0,0.2);
+			    joystick=SDL_JoystickOpen(0);
+			    music=Mix_LoadMUS("data/audio/background.mp3");
+			    audio();
+			  	captureVideo_=new captureVideo(screenWidth, screenHeight, 60, "output.mp4");
+			 	frameIndex = 0;
+				//numAxis=1;
+				numAxis[0]=1;
+				numAxis2[0]=0;
+				numAxis3[0]=2;
+				numAxis4[0]=3;
+				
+				forwardButton.push_back(new boutton(50, 100, 290, 310));
+				forwardButton.push_back(new boutton(50, 100, 210, 240));
+				forwardButton.push_back(new boutton(50, 100, 350, 380));
+				forwardButton.push_back(new boutton(50, 100, 390, 430));
+				forwardButton.push_back(new boutton(50, 100, 430, 480));
+//	130, 170, 50, 30,
+//50, 170, 50, 30,	
+			    backButton.push_back(new boutton(130,180,290,310));
+			    backButton.push_back(new boutton(130,180,210, 240));
+			    backButton.push_back(new boutton(130,180,350, 380));
+			    backButton.push_back(new boutton(130,180,390, 430));
+			    backButton.push_back(new boutton(130,180,430, 480));
+			    
+			    musicBoucle=new sound();
+			    musicBoucle->initAudio();
+			    musicBoucle->loadSoundWav("data/sound/vehicule.wav",25);
  
  //std::vector<unsigned int> anim;
  //obj.loadAnimation(anim, "data/object/carsAI",100);
@@ -154,6 +176,9 @@ bool game::initSDL()
 	}
 	
 	gladLoadGLLoader(SDL_GL_GetProcAddress);
+//	300, 420, 100, 80
+//	500, 420, 100, 80
+
 	
 }
 
@@ -166,6 +191,7 @@ game::~game()
 	delete vehicule[i];
 	delete captureVideo_;
 delete screen;
+delete music;
 Mix_FreeMusic(music);
 Mix_CloseAudio();
 SDL_JoystickClose (joystick);
@@ -196,6 +222,70 @@ void game::start()
                 while(SDL_PollEvent(&event))
                 {
                
+        if (event.type == SDL_MOUSEBUTTONDOWN) {
+        	
+        	if(playerCam_->cam.isMouseIn()==false)
+        	{
+			
+            int mx = event.button.x;
+            int my = event.button.y;
+            if (mx >= forwardButton[0]->getMinX() && mx <= forwardButton[0]->getMaxX() && my >= forwardButton[0]->getMinY() && my <= forwardButton[0]->getMaxY()) {
+                std::cout << "Bouton Jouer cliqué +\n";
+                numAxis[0]++;
+            }
+            
+            if (mx >= forwardButton[1]->getMinX() && mx <= forwardButton[1]->getMaxX() && my >= forwardButton[1]->getMinY() && my <= forwardButton[1]->getMaxY()) {
+                std::cout << "Bouton Jouer cliqué +\n";
+                numAxis2[0]++;
+            }
+            
+             if (mx >= forwardButton[2]->getMinX() && mx <= forwardButton[2]->getMaxX() && my >= forwardButton[2]->getMinY() && my <= forwardButton[2]->getMaxY()) {
+                std::cout << "Bouton Jouer cliqué +\n";
+                numAxis3[0]++;
+            }
+            
+             if (mx >= forwardButton[3]->getMinX() && mx <= forwardButton[3]->getMaxX() && my >= forwardButton[3]->getMinY() && my <= forwardButton[3]->getMaxY()) {
+                std::cout << "Bouton Jouer cliqué +\n";
+                numAxis4[0]++;
+            }
+            
+            if (mx >= forwardButton[4]->getMinX() && mx <= forwardButton[4]->getMaxX() && my >= forwardButton[4]->getMinY() && my <= forwardButton[4]->getMaxY()) {
+                std::cout << "Bouton Jouer cliqué +\n";
+                vehicule[0]->setDeltaTime(0.1f);
+            }
+            
+             if (mx >= backButton[0]->getMinX() && mx <= backButton[0]->getMaxX() && my >= backButton[0]->getMinY() && my <= backButton[0]->getMaxY()) {
+             	numAxis[0]--;
+                std::cout << "Bouton Jouer cliqué -\n";
+          
+            }
+            
+            if (mx >= backButton[1]->getMinX() && mx <= backButton[1]->getMaxX() && my >= backButton[1]->getMinY() && my <= backButton[1]->getMaxY()) {
+             	numAxis2[0]--;
+                std::cout << "Bouton Jouer cliqué -\n";
+          
+            }
+            
+             if (mx >= backButton[2]->getMinX() && mx <= backButton[2]->getMaxX() && my >= backButton[2]->getMinY() && my <= backButton[2]->getMaxY()) {
+             	numAxis3[0]--;
+                std::cout << "Bouton Jouer cliqué -\n";
+          
+            }
+            
+              if (mx >= backButton[3]->getMinX() && mx <= backButton[3]->getMaxX() && my >= backButton[3]->getMinY() && my <= backButton[3]->getMaxY()) {
+             	numAxis4[0]--;
+                std::cout << "Bouton Jouer cliqué -\n";
+          
+            }
+        
+        if (mx >= backButton[4]->getMinX() && mx <= backButton[4]->getMaxX() && my >= backButton[4]->getMinY() && my <= backButton[4]->getMaxY()) {
+             	vehicule[0]->setDeltaTime(-0.1f);
+                std::cout << "Bouton Jouer cliqué -\n";
+          
+            }
+    }
+}
+            
                 	  switch(event.type)
                         {
                 	
@@ -209,11 +299,13 @@ void game::start()
                     glViewport(0, 0, screenWidth, screenHeight);
         }
         break;
+        
+        
                     	case SDL_JOYAXISMOTION:
 							
                         if( event.jaxis.which == 0 )
 						{	
-				 if (event.jaxis.axis == 1) { // ton axe combiné (à vérifier avec printf)
+				 if (event.jaxis.axis == numAxis[0]) { // ton axe combiné (à vérifier avec printf)
 		        int val = event.jaxis.value;
 		
 		        // Zone morte centrale
@@ -233,7 +325,7 @@ void game::start()
 		        }
 		    }
 		    
-		      if (event.jaxis.axis == 0) { // axe volant gauche/droite (à vérifier avec printf)
+		      if (event.jaxis.axis == numAxis2[0]) { // axe volant gauche/droite (à vérifier avec printf)
 		        int val = event.jaxis.value;
 		
 		        // Deadzone pour éviter de déclencher en ligne droite
@@ -251,7 +343,7 @@ void game::start()
 		        }
 		    }
 		    
-		    if(event.jaxis.axis == 2)
+		    if(event.jaxis.axis == numAxis3[0])
 		    {
 		    	 int val = event.jaxis.value;
 		    	 
@@ -271,7 +363,7 @@ void game::start()
 		    
 			}
 			
-			  if(event.jaxis.axis == 3)
+			  if(event.jaxis.axis == numAxis4[0])
 		    {
 		    	 int val = event.jaxis.value;
 		    	 
@@ -316,9 +408,10 @@ void game::start()
 							
 							
 							case SDL_MOUSEBUTTONDOWN:
-                                       
+                                       if (event.button.button == SDL_BUTTON_LEFT) {
                                        playerCam_->cam.mouseIn(true);
                                        SDL_ShowCursor(SDL_DISABLE);
+                                   }
                                         break;
                                 case SDL_KEYDOWN:
                                         if(event.key.keysym.sym==SDLK_p)
@@ -424,8 +517,8 @@ void game::start()
 
 void game::update()
 {
-	
-
+		GPITCH = 1.0f + (vehicule[0]->getSpeed()/8);
+		//musicBoucle->playSoundWav(25);
 		captureVideo_->captureFrame();
 
      //	playerCam_->update(levels[5]->getCollisionPlanes());
@@ -537,6 +630,12 @@ std::string game::float2str(float x) {
     return ss.str( );
 }
 
+std::string game::int2str(int x) {
+        std::stringstream ss;
+	    ss << x;
+	    return ss.str();
+}
+
 void game::audio()
 {
 	 
@@ -548,10 +647,14 @@ void game::audio()
 void game::show()
 {
 
+
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         glLoadIdentity();
 
-
+ 
+      	  SDL_Color color = {255, 0, 0, 0}; // Red
+      	  
+      	  SDL_Color color2 = {255, 50, 100, 0}; // Red
 
       // playerCam_->cam.setLocation(vector3d(vehicule[0]->getLocation().x+5*cos(vehicule[0]->getRotation().x*M_PI/180),vehicule[0]->getLocation().y+12,vehicule[0]->getLocation().z+5*sin(vehicule[0]->getRotation().z*M_PI/180)));
 		//Control(0.2,0.2,mousein);
@@ -579,18 +682,83 @@ void game::show()
       	    
    	for(int i=0;i<vehicule.size();i++)
       	  vehicule[i]->show();
-      
+    
+    if(playerCam_->cam.isMouseIn()==false)
+    {
+    int mx, my;
+    SDL_GetMouseState(&mx, &my);
+    
+ //  	forwardButton.push_back(new boutton(50, 100, 290, 310));
+//	forwardButton.push_back(new boutton(50, 100, 210, 240));
+	forwardButton[0]->set2D(screenWidth, screenHeight); 
+    forwardButton[0]->drawButton(50, 290, 50, 30, (mx >= forwardButton[0]->getMinX() && mx <= forwardButton[0]->getMaxX() && my >= forwardButton[0]->getMinY() && my <= forwardButton[0]->getMaxY()));
+    
+
+    forwardButton[0]-> unset2D();
+    
+    forwardButton[1]->set2D(screenWidth, screenHeight); 
+    forwardButton[1]->drawButton(50, 210, 50, 30, (mx >= forwardButton[1]->getMinX() && mx <= forwardButton[1]->getMaxX() && my >= forwardButton[1]->getMinY() && my <= forwardButton[1]->getMaxY()));
+    
+
+    forwardButton[1]-> unset2D();
+    
+    forwardButton[2]->set2D(screenWidth, screenHeight); 
+    forwardButton[2]->drawButton(50, 350, 50, 30, (mx >= forwardButton[2]->getMinX() && mx <= forwardButton[2]->getMaxX() && my >= forwardButton[2]->getMinY() && my <= forwardButton[2]->getMaxY()));
+    
+
+    forwardButton[2]-> unset2D();
+    
+    forwardButton[3]->set2D(screenWidth, screenHeight); 
+    forwardButton[3]->drawButton(50, 400, 50, 30, (mx >= forwardButton[3]->getMinX() && mx <= forwardButton[3]->getMaxX() && my >= forwardButton[3]->getMinY() && my <= forwardButton[3]->getMaxY()));
+    
+
+    forwardButton[3]-> unset2D();
+    
+	forwardButton[4]->set2D(screenWidth, screenHeight); 
+    forwardButton[4]->drawButton(50, 450, 50, 30, (mx >= forwardButton[4]->getMinX() && mx <= forwardButton[4]->getMaxX() && my >= forwardButton[4]->getMinY() && my <= forwardButton[4]->getMaxY()));
+    
+
+    forwardButton[4]-> unset2D();
+    
+    	    //backButton.push_back(new boutton(130,180,290,310));
+			  //  backButton.push_back(new boutton(130,180,210, 240));
+    
+    backButton[0]->set2D(screenWidth, screenHeight); 
+    backButton[0]->drawButton(130, 290, 50, 30, (mx >= backButton[0]->getMinX() && mx <= backButton[0]->getMaxX() && my >= backButton[0]->getMinY() && my <= backButton[0]->getMaxY()));
+    backButton[0]-> unset2D();
+    
+    backButton[1]->set2D(screenWidth, screenHeight); 
+    backButton[1]->drawButton(130, 210, 50, 30, (mx >= backButton[1]->getMinX() && mx <= backButton[1]->getMaxX() && my >= backButton[1]->getMinY() && my <= backButton[1]->getMaxY()));
+    backButton[1]-> unset2D();
+
+    backButton[2]->set2D(screenWidth, screenHeight); 
+    backButton[2]->drawButton(130, 350, 50, 30, (mx >= backButton[2]->getMinX() && mx <= backButton[2]->getMaxX() && my >= backButton[2]->getMinY() && my <= backButton[2]->getMaxY()));
+    backButton[2]-> unset2D();
+    
+    backButton[3]->set2D(screenWidth, screenHeight); 
+    backButton[3]->drawButton(130, 400, 50, 30, (mx >= backButton[3]->getMinX() && mx <= backButton[3]->getMaxX() && my >= backButton[3]->getMinY() && my <= backButton[3]->getMaxY()));
+    backButton[3]-> unset2D();
+    
+    backButton[4]->set2D(screenWidth, screenHeight); 
+    backButton[4]->drawButton(130, 450, 50, 30, (mx >= backButton[4]->getMinX() && mx <= backButton[4]->getMaxX() && my >= backButton[4]->getMinY() && my <= backButton[4]->getMaxY()));
+    backButton[4]-> unset2D();
    
-          
-      	  SDL_Color color = {255, 0, 0, 0}; // Red
-      	  
-      	  SDL_Color color2 = {255, 50, 100, 0}; // Red
+        
 		glPushMatrix();
-	  	RenderText("vitesse:"+float2str(vehicule[0]->getSpeed()*-50.0f), color, -1.0, 0.9,0.1,0.5, 50);
-		RenderText("angle:"+float2str(vehicule[0]->getJoy()), color2, 1.0, 0.2,0.1,0.1, 50);
+		RenderText("numAxis:  "+int2str(numAxis[0]), color2, 1.0, 0.9,0.1,0.7, 30);
+		RenderText("numAxis2:  "+int2str(numAxis2[0]), color2, 1.0, .3,0.1, .99, 30);
+		RenderText("numAxis3:  "+int2str(numAxis3[0]), color2, 1.0, .3,0.1, .5, 30);
+		RenderText("numAxis4:  "+int2str(numAxis4[0]), color2, 1.0, .3,0.1, .3, 30);
+		RenderText("deltaTime:  "+float2str(vehicule[0]->getDeltaTime()), color2, 1.0, .3,0.1, .1, 30);
 		glPopMatrix();
+		
+	}
 	
-	
+		glPushMatrix();
+		RenderText("vitesse:  "+float2str(vehicule[0]->getSpeed()*-50.0f), color, -1.0, 0.1,0.5,0.0, 30);
+		RenderText("angle:  "+float2str(vehicule[0]->getJoy()), color2, 1.0, 0.2,0.5,0.1, 30);
+		glPopMatrix();
+		
       	
    //	player1->cam.loc.x=car1->loc.x+2;
         //UpdateCamera();

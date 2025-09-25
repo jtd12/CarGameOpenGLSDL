@@ -18,7 +18,8 @@
 #include"level.h"
 #include"player.h"
 #include"car.h"
-
+#include"boutton.hpp"
+#include"sound.hpp"
 #define LARGEUR 1260
 #define HAUTEUR 740
 
@@ -48,16 +49,24 @@ class game
 	void show();
 	void RenderText(std::string message, SDL_Color color, int x, int y,float x2,float y2, int size);
 	void MakeShadowMatrix(GLfloat points_plan[3][3], GLfloat lightPos[4], GLfloat destMat[4][4]);
+	std::string int2str(int x);
 	void Normale(float v[3][3], float out[3]);
 	void Vecteur_Unite(float vector[3]);
 	void lighting();
 	std::string float2str(float x);
 	captureVideo* captureVideo_;
 	int frameIndex;
+	std::vector<boutton*> forwardButton;
+	std::vector<boutton*> backButton;
+	int numAxis[4];
+	int numAxis2[4];
+	int numAxis3[4];
+	int numAxis4[4];
+	sound* musicBoucle;
 	
 	public:
 		game();
-	~game();
+		~game();
 		void start();
 		bool initSDL();
 		void resizeWindow(int windowWidth, int windowHeight);

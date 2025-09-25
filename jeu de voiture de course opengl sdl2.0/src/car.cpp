@@ -34,6 +34,7 @@ car::car(unsigned int name_, const char* n, float sprints,float normals,float lo
 		a=vector3d(0,0,0);
 		a_touch=0;
 		 velocity=vector3d(0,0,0);
+		deltaTime=1.0f;
 		
 		//weapons.push_back(wep);
 	//	curWeapon=0;
@@ -235,9 +236,19 @@ void car::setLocation(vector3d vec)
     velocity *= 0.6f;
     
 	// mise à jour position
-	loc.x -= velocity.x;
-	loc.z += velocity.z;
+	loc.x -= velocity.x*deltaTime;
+	loc.z += velocity.z*deltaTime;
   
+   }
+   
+   float car::getDeltaTime()
+   {
+   	return deltaTime;
+   }
+   
+   void car::setDeltaTime(float t)
+   {
+   	deltaTime+=t;
    }
    
 void car::control()

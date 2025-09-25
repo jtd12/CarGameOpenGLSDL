@@ -4,8 +4,8 @@
 CPP      = g++.exe
 CC       = gcc.exe
 WINDRES  = windres.exe
-OBJ      = main.o camera.o car.o collision.o vector.o functions.o objloader.o player.o skybox.o game.o level.o text.o C:/library/glad/lib/glad.o captureVideo.o
-LINKOBJ  = main.o camera.o car.o collision.o vector.o functions.o objloader.o player.o skybox.o game.o level.o text.o C:/library/glad/lib/glad.o captureVideo.o
+OBJ      = main.o camera.o car.o collision.o vector.o functions.o objloader.o player.o skybox.o game.o level.o text.o C:/library/glad/lib/glad.o captureVideo.o boutton.o sound.o
+LINKOBJ  = main.o camera.o car.o collision.o vector.o functions.o objloader.o player.o skybox.o game.o level.o text.o C:/library/glad/lib/glad.o captureVideo.o boutton.o sound.o
 LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc -L"C:/library/SDL2_image-2.5.3/x86_64-w64-mingw32/lib" -L"C:/library/SDL2-2.0.12/x86_64-w64-mingw32/lib" -L"C:/library/SDL2_mixer-2.5.3/x86_64-w64-mingw32/lib" -L"C:/library/SDL2_ttf-2.19.3/x86_64-w64-mingw32/lib" -lopengl32 -lglu32 -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/library/SDL2-2.0.12/x86_64-w64-mingw32/include/SDL2" -I"C:/library/SDL2_image-2.5.3/x86_64-w64-mingw32/include/SDL2" -I"C:/library/SDL2_mixer-2.5.3/x86_64-w64-mingw32/include/SDL2" -I"C:/library/SDL2_ttf-2.19.3/x86_64-w64-mingw32/include/SDL2"
 CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++" -I"C:/library/SDL2-2.0.12/x86_64-w64-mingw32/include/SDL2" -I"C:/library/SDL2_image-2.5.3/x86_64-w64-mingw32/include/SDL2" -I"C:/library/SDL2_mixer-2.5.3/x86_64-w64-mingw32/include/SDL2" -I"C:/library/SDL2_ttf-2.19.3/x86_64-w64-mingw32/include/SDL2"
@@ -65,3 +65,9 @@ C:/library/glad/lib/glad.o: C:/library/glad/lib/glad.c
 
 captureVideo.o: captureVideo.cpp
 	$(CPP) -c captureVideo.cpp -o captureVideo.o $(CXXFLAGS)
+
+boutton.o: boutton.cpp
+	$(CPP) -c boutton.cpp -o boutton.o $(CXXFLAGS)
+
+sound.o: sound.cpp
+	$(CPP) -c sound.cpp -o sound.o $(CXXFLAGS)

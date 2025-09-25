@@ -48,6 +48,7 @@ class car
 	camera cam;
 	vector3d velocity;
 	Sphere carSphere;
+	float deltaTime;
 	public:
 
 car(unsigned int name, const char* n, float sprints,float normals,float looks,objloader* terrain);
@@ -86,5 +87,7 @@ car(unsigned int name, const char* n, float sprints,float normals,float looks,ob
 		void setTurn(bool a);
 		bool getTurn();
 		float getJoy();
+		float getDeltaTime();
+		void setDeltaTime(float t);
 	};
 	#endif
