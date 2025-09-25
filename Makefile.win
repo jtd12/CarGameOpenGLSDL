@@ -4,13 +4,13 @@
 CPP      = g++.exe -D__DEBUG__
 CC       = gcc.exe -D__DEBUG__
 WINDRES  = windres.exe
-OBJ      = main.o aicar.o camera.o car.o collision.o collisionplane.o vector.o collisionsphere.o functions.o objloader.o player.o skybox.o game.o level.o text.o
-LINKOBJ  = main.o aicar.o camera.o car.o collision.o collisionplane.o vector.o collisionsphere.o functions.o objloader.o player.o skybox.o game.o level.o text.o
+OBJ      = main.o camera.o car.o collision.o vector.o functions.o objloader.o player.o skybox.o game.o level.o text.o captureVideo.o
+LINKOBJ  = main.o camera.o car.o collision.o vector.o functions.o objloader.o player.o skybox.o game.o level.o text.o captureVideo.o
 LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib32" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib32" -static-libgcc -L"C:/library/SDL_image-1.2.12/lib/x86" -L"C:/library/SDL-1.2.15/lib" -L"C:/library/SDL_mixer-1.2.12/lib/x86" -lopengl32 -lglu32 -lmingw32 -lSDLmain -lSDL -lSDL_Image -lSDL_mixer  C:/library/SDL_ttf-2.0.11/lib/x86/SDL_ttf.lib -m32 -g3
 INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/library/SDL-1.2.15/include/SDL" -I"C:/library/SDL_image-1.2.12/include" -I"C:/library/SDL_mixer-1.2.12/include"
 CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++" -I"C:/library/SDL-1.2.15/include/SDL" -I"C:/library/SDL_image-1.2.12/include" -I"C:/library/SDL_mixer-1.2.12/include"
 BIN      = Projet1.exe
-CXXFLAGS = $(CXXINCS) -m32 -g3
+CXXFLAGS = $(CXXINCS) -m32 -g3 -std=c++0x
 CFLAGS   = $(INCS) -m32 -g3
 RM       = rm.exe -f
 
@@ -27,9 +27,6 @@ $(BIN): $(OBJ)
 main.o: main.cpp
 	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
 
-aicar.o: aicar.cpp
-	$(CPP) -c aicar.cpp -o aicar.o $(CXXFLAGS)
-
 camera.o: camera.cpp
 	$(CPP) -c camera.cpp -o camera.o $(CXXFLAGS)
 
@@ -39,14 +36,8 @@ car.o: car.cpp
 collision.o: collision.cpp
 	$(CPP) -c collision.cpp -o collision.o $(CXXFLAGS)
 
-collisionplane.o: collisionplane.cpp
-	$(CPP) -c collisionplane.cpp -o collisionplane.o $(CXXFLAGS)
-
 vector.o: vector.cpp
 	$(CPP) -c vector.cpp -o vector.o $(CXXFLAGS)
-
-collisionsphere.o: collisionsphere.cpp
-	$(CPP) -c collisionsphere.cpp -o collisionsphere.o $(CXXFLAGS)
 
 functions.o: functions.cpp
 	$(CPP) -c functions.cpp -o functions.o $(CXXFLAGS)
@@ -68,3 +59,6 @@ level.o: level.cpp
 
 text.o: text.cpp
 	$(CPP) -c text.cpp -o text.o $(CXXFLAGS)
+
+captureVideo.o: captureVideo.cpp
+	$(CPP) -c captureVideo.cpp -o captureVideo.o $(CXXFLAGS)

@@ -10,8 +10,8 @@ class vector3d{
 		vector3d(float a,float b);
 		vector3d(float a,float b,float c);
 		~vector3d(){};
-		float dotproduct(const vector3d& vec2);
-		vector3d crossproduct(const vector3d& vec2);
+		float dotproduct(const vector3d& vec2)const;
+		vector3d crossproduct(const vector3d& vec2)const;
 		float length();
 		void change(float a,float b,float c);
 		
@@ -20,10 +20,10 @@ class vector3d{
 		void changeY(float b);
 		void changeZ(float c);
 		void normalize();
-		vector3d operator+(const vector3d& vec2);
-		vector3d operator-(const vector3d& vec2);
+		vector3d operator+(const vector3d& vec2)const;
+		vector3d operator-(const vector3d& vec2) const;
 		vector3d operator*(const float& num);
-		vector3d operator/(const float& num);
+		vector3d operator/(const float& num) ;
 		vector3d& operator+=(const vector3d& vec2);
 		vector3d& operator-=(const vector3d& vec2);
 		vector3d& operator*=(const float& num);

@@ -19,12 +19,12 @@ vector3d::vector3d(float a,float b,float c)
 	z=c;
 }
 
-float vector3d::dotproduct(const vector3d& vec2)
+float vector3d::dotproduct(const vector3d& vec2)const
 {
 	return (x*vec2.x+y*vec2.y+z*vec2.z);
 }
 
-vector3d vector3d::crossproduct(const vector3d& vec2)
+vector3d vector3d::crossproduct(const vector3d& vec2)const
 {
 	return (vector3d(y*vec2.z-z*vec2.y,x*vec2.z-z*vec2.x,x*vec2.y-y*vec2.x));
 }
@@ -77,12 +77,12 @@ void vector3d::normalize()
 	}
 }
 
-vector3d vector3d::operator+(const vector3d& vec2)
+vector3d vector3d::operator+(const vector3d& vec2)const
 {
 	return (vector3d(x+vec2.x,y+vec2.y,z+vec2.z));
 }
 
-vector3d vector3d::operator-(const vector3d& vec2)
+vector3d vector3d::operator-(const vector3d& vec2)const
 {
 	return (vector3d(x-vec2.x,y-vec2.y,z-vec2.z));
 }
@@ -91,6 +91,12 @@ vector3d vector3d::operator*(const float& num)
 {
 	return (vector3d(x*num,y*num,z*num));
 }
+
+
+vector3d vector3d::operator/(const float& s) {
+    return vector3d{x / s, y / s, z / s};
+}
+
 
 vector3d& vector3d::operator+=(const vector3d& vec2)
 {

@@ -25,10 +25,7 @@ game::game()
       	{
       		printf("son impossible!");
 		  }
-    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) //Initialisation de l'API Mixer
-   {
-      printf("%s", Mix_GetError());
-   }
+
  
          screen=SDL_SetVideoMode( screenWidth,  screenHeight,32,SDL_OPENGL|SDL_RESIZABLE);
      
@@ -41,48 +38,46 @@ game::game()
     
     glEnable(GL_COLOR_MATERIAL);
        
-    
-     
-       
-      //	initskybox();
-      	std::vector<collisionplane> mapcp;
-     
-      	std::vector<vector3d> mapsp;
-      	mapsp.push_back(vector3d(0.1,0.2,0.1));
+    std::vector<collisionplane> mapcp;
       	
-       unsigned int map=obj.load("data/decor/map.obj",&mapcp);
-    unsigned int map2=obj.load("data/decor/map2.obj",&mapcp);
-     unsigned int map3=obj.load("data/decor/map3.obj",&mapcp);
-          unsigned int map4=obj.load("data/decor/map4.obj",&mapcp);
-            unsigned int map5=obj.load("data/decor/map5.obj",&mapcp);
-         unsigned int map6=obj.load("data/decor/collision_01.obj",&mapcp);
-       
    
-        unsigned int map11=obj.load("data/decor/sky.obj",&mapcp); 
-        
+      	std::vector<vector3d> mapsp;
+     
+        unsigned int map=obj.load("data/decor/map.obj");
+    unsigned int map2=obj.load("data/decor/map2.obj");
+     unsigned int map3=obj.load("data/decor/map3.obj");
+          unsigned int map4=obj.load("data/decor/map4.obj");
+            unsigned int map5=obj.load("data/decor/map5.obj");
+            unsigned int map6=obj.load("data/decor/sky.obj");
+ 			unsigned int map7=obj.load("data/decor/map6.obj");
+ 			
       levels.push_back(new level("name",map,mapcp,mapsp));
         levels.push_back(new level("name",map2,mapcp,mapsp));
                levels.push_back(new level("name",map3,mapcp,mapsp));
                 levels.push_back(new level("name",map4,mapcp,mapsp));
                  levels.push_back(new level("name",map5,mapcp,mapsp));
-                    levels.push_back(new level("name",map6,mapcp,mapsp));
-  	
-                   levels.push_back(new level("name",map11,mapcp,mapsp));      
+                levels.push_back(new level("name",map6,mapcp,mapsp));
+                levels.push_back(new level("name",map7,mapcp,mapsp));
+				terrain=new objloader();
+      			terrain->load("data/decor/collision_01.obj");
+      			terrain2=new objloader();
+      			terrain2->load("data/decor/collision_02.obj");
+
+
 					 
-                unsigned int mesh=obj.load("data/car.obj",&mapcp);
-               	vehicule.push_back(new car(mesh,"voiture",collisionsphere(vector3d(-350,50,65),3.2),0.02,0.0,0.7));
+                unsigned int mesh=obj.load("data/car.obj");
+               	vehicule.push_back(new car(mesh,"voiture",0.02,0.0,0.7,terrain));
       //weapons.push_back(new weapon())
-    playerCam_=new playerCam("player1",collisionsphere(vector3d(-350,60,75),30.0),0.02,3.0,0.2);
+    playerCam_=new playerCam("player1",0.02,3.0,0.2);
     joystick=SDL_JoystickOpen(0);
-
- //std::vector<unsigned int> anim;
- //obj.loadAnimation(anim, "data/object/carsAI",100);
-    //weapons.push_back(new weapon(anim,anim[0],1,16,19,vector3d(0,0,0),vector3d(0,0,0),vector3d(0,0,0),vector3d(0,0,0),100,1000,10,30,300,20,"weapon_anim",1));
-           //loadAnimation(anim, "C:/Users/jtd/Documents/jeu fps/data/weapon_anim",38);
-          // weapons.push_back(new weapon(anim,anim[0],1,16,19,vector3d(0,0,0),vector3d(0,0,0),vector3d(0,0,0),vector3d(0,0,0),100,1000,10,30,300,20,"C:/Users/jtd/Documents/jeu fps/data/weapon_anim/weapon_000001.obj",1));
-
-	music=Mix_LoadMUS("data/audio/background.mp3");
-     	audio();
+        if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) //Initialisation de l'API Mixer
+   {
+      printf("%s", Mix_GetError());
+   }
+    music=Mix_LoadMUS("data/audio/background.mp3");
+    audio();
+ captureVideo_=new captureVideo(screenWidth, screenHeight, 60, "data/output.mp4");
+ frameIndex = 0;
 
   //  cube=loadObject("test.obj");
        
@@ -343,16 +338,23 @@ void game::start()
 void game::update()
 {
 
-     	playerCam_->update(levels[0]->getCollisionPlanes());
-		playerCam_->orbit();
+     captureVideo_->captureFrame();
+
+     //	playerCam_->update(levels[5]->getCollisionPlanes());
+		//playerCam_->orbit();
       	for(int i=0;i<vehicule.size();i++)
-      	  vehicule[i]->update(levels[0]->getCollisionPlanes());
+      	  vehicule[i]->update(terrain->collisionMesh,terrain);
+      	
+      	for(int i=0;i<vehicule.size();i++)
+      	  vehicule[i]->update2(terrain2->collisionMesh);
+      	  
       	for(int i=0;i<vehicule.size();i++)
       	  vehicule[i]->control();
       for(int i=0;i<levels.size();i++)
       
       	levels[i]->update();
 	
+
 
 }
 

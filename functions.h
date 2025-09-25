@@ -3,7 +3,7 @@
 //Free source, modify if you want, LGPL licence (I guess), I would be happy, if you would not delete the link
 //so other people can see the tutorial
 //this file is functions.h, it's contain the function prototypes
-#include <C:/SDL-1.2.15/include/SDL/SDL.h>
+#include <C:/library/SDL-1.2.15/include/SDL/SDL.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <cstdlib>

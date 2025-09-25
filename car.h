@@ -5,20 +5,20 @@
 #include<GL/gl.h>
 #include<GL/glu.h>
 #include"vector.h"
-#include"collisionplane.h"
-#include"collisionsphere.h"
 #include"camera.h"
 #include<string>
 #include<vector>
 #include<math.h>
 #include"collision.h"
 #define ni 8
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 class car
 {
 	int mesh;
 	std::string name;
-	collisionsphere cs;
 	int health;
 	vector3d force;
 	vector3d direction;
@@ -45,12 +45,16 @@ class car
 	bool  joyInputActive;
 	bool joyTurn;
 	camera cam;
+	vector3d velocity;
+	Sphere carSphere;
+	
 	public:
 
-car(unsigned int name, const char* n,collisionsphere ccs, float sprints,float normals,float looks);
+		car(unsigned int name_, const char* n, float sprints,float normals,float looks,objloader* terrain);
 		~car();
-		void update(std::vector<collisionplane>& collplane);
 		void show();
+		void update(const std::vector<CollisionTriangle>& collisionMesh,objloader* terrain);
+		void update2(const std::vector<CollisionTriangle>& collisionMesh);
 		void setPosition(vector3d pos);
 			void setLocation(vector3d vec);
 			vector3d getLocation();

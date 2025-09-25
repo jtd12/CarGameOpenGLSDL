@@ -14,7 +14,7 @@
 #include"level.h"
 #include"player.h"
 #include"car.h"
-
+#include"captureVideo.hpp"
 #define LARGEUR 1260
 #define HAUTEUR 740
 
@@ -42,6 +42,11 @@ class game
 	void Vecteur_Unite(float vector[3]);
 	void lighting();
 	std::string float2str(float x);
+	captureVideo* captureVideo_;
+	int frameIndex;
+	objloader* terrain;
+	objloader* terrain2;
+	
 	
 	public:
 		game();

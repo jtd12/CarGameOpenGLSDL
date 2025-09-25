@@ -5,18 +5,15 @@
 #include<vector>
 #include"vector.h"
 #include"collision.h"
-#include"collisionsphere.h"
-#include"collisionplane.h"
 #include"camera.h"
 #include<cmath>
 #include<iostream>
-#include <C:/library/SDL_image-1.2.12/include/SDL_image.h>
 #define pi 3.14159265359 // on definit un nombre pi
 
 class playerCam
 {
 public:
-	playerCam(const char * n,collisionsphere ccs,float sprints,float normals,float looks);
+	playerCam(const char * n,float sprints,float normals,float looks);
 	~playerCam();
 	camera cam;
 		void update(std::vector<collisionplane>& collplane);
@@ -25,9 +22,9 @@ public:
 		void setAroundTouch3(int b);
 		void setAroundTouch4(int b);
 	void show();
-	 	collisionsphere getCollissionSphere();
+	 
 	 		void setPosition(vector3d pos);
-	 		collisionsphere cs;
+
 	 			void setLocation(vector3d  loc);
 			vector3d getLocation();
 			void orbit();
